@@ -3,9 +3,18 @@ import algoliasearch from 'algoliasearch';
 import fs from 'fs';
 import path from 'path';
 
-const APP_ID = 'HWKAPLYJ2L';
-const ADMIN_KEY = '7ba35a485aaec21726a2ad8cf953edd8';
-const INDEX_NAME = 'rental_items';
+import dotenv from 'dotenv';
+
+dotenv.config({ path: path.join(process.cwd(), '.env') });
+
+const APP_ID = process.env.ALGOLIA_APP_ID || '';
+const ADMIN_KEY = process.env.ALGOLIA_ADMIN_API_KEY || '';
+const INDEX_NAME = process.env.VITE_ALGOLIA_INDEX_NAME || 'rental_items';
+
+if (!APP_ID || !ADMIN_KEY) {
+    console.error('Missing Algolia credentials in .env');
+    process.exit(1);
+}
 
 const logFile = path.join(process.cwd(), 'sync_log.txt');
 const log = (msg: string) => {
