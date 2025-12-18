@@ -1,0 +1,28 @@
+1. Authenticating...
+Token obtained.
+2. Fetching Items...
+Testing with Item: eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee (Proyector Epson Home Cinema)
+3. Creating DRAFT Rental (Adding to Cart)...
+   Draft creation note: "El artículo no está disponible en esas fechas"
+4. Verifying Cart (GET /rentals/my-rentals)...
+   Found 0 DRAFT items in rentals.
+5. Creating BUSY Rental for Landing Page tag...
+   Rental creation note: "El artículo no está disponible en esas fechas"
+6. Verifying Landing Page Status (GET /items)...
+   Item ID: "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"
+   FULL ITEM OBJECT: {
+  "id": "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee",
+  "title": "Proyector Epson Home Cinema",
+  "description": "Full HD 1080p, 3000 lúmenes. Perfecto para cine en casa o presentaciones.",
+  "category": "Audio",
+  "pricePerDay": 60,
+  "imageUrl": "https://picsum.photos/id/180/800/600",
+  "location": "Centro, Huancayo",
+  "latitude": -12.0681,
+  "longitude": -75.2106,
+  "available": true,
+  "ownerId": "11111111-1111-1111-1111-111111111111",
+  "createdAt": "2025-12-18T01:31:24.455Z",
+  "updatedAt": "2025-12-18T01:31:24.455Z"
+}
+   [FAIL] Property missing or false.

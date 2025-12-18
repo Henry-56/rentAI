@@ -1,0 +1,7 @@
+{
+  "name": "RentAI - Smart Rental Platform",
+  "description": "A full-stack ready frontend for a peer-to-peer rental marketplace featuring AI-powered assistance, owner dashboards, and seamless booking flows.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

@@ -1,0 +1,11 @@
+--- Sync Start ---
+Config: HWKAPLYJ2L / rental_items
+Client initialized.
+DB Fetch: Found 5 items.
+Mapped 5 objects.
+Sending to Algolia...
+Sent! Task ID: undefined
+ObjectIDs: 5
+Waiting for task...
+ERROR: Cannot read properties of undefined (reading 'toString')
+{}

@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://neondb_owner:npg_38aQuZLBnhFC@ep-bold-frog-a4h6xcv2-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require"
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  name          String
+  password      String
+  role          UserRole
+  avatarUrl     String?
+  phoneNumber   String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  ownedItems    Item[]    @relation("ItemOwner")
+  rentals       Rental[]  @relation("RenterRentals")
+  givenReviews  Review[]  @relation("ReviewerReviews")
+}
+
+model Item {
+  id            String    @id @default(uuid())
+  title         String
+  description   String
+  category      String
+  pricePerDay   Float
+  imageUrl      String
+  location      String
+  latitude      Float
+  longitude     Float
+  available     Boolean   @default(true)
+  ownerId       String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  owner         User      @relation("ItemOwner", fields: [ownerId], references: [id])
+  rentals       Rental[]
+  reviews       Review[]
+  
+  @@index([ownerId])
+  @@index([category])
+  @@index([available])
+}
+
+model Rental {
+  id            String       @id @default(uuid())
+  itemId        String
+  renterId      String
+  startDate     DateTime
+  endDate       DateTime
+  totalPrice    Float
+  status        RentalStatus @default(PENDING_PAYMENT)
+  culqiToken    String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  
+  item          Item         @relation(fields: [itemId], references: [id])
+  renter        User         @relation("RenterRentals", fields: [renterId], references: [id])
+  review        Review?
+  
+  @@index([itemId])
+  @@index([renterId])
+  @@index([status])
+}
+
+model Review {
+  id            String    @id @default(uuid())
+  rentalId      String    @unique
+  itemId        String
+  reviewerId    String
+  rating        Int
+  comment       String
+  createdAt     DateTime  @default(now())
+  
+  rental        Rental    @relation(fields: [rentalId], references: [id])
+  item          Item      @relation(fields: [itemId], references: [id])
+  reviewer      User      @relation("ReviewerReviews", fields: [reviewerId], references: [id])
+  
+  @@index([itemId])
+  @@index([reviewerId])
+}
+
+enum UserRole {
+  OWNER
+  RENTER
+}
+
+enum RentalStatus {
+  PENDING_PAYMENT
+  IN_REVIEW
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
