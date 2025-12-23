@@ -24,7 +24,8 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ amount, onSuccess, onC
   const [isCulqiLoaded, setIsCulqiLoaded] = useState(false);
 
   // LLAVE PÚBLICA PROPORCIONADA
-  const CULQI_PUBLIC_KEY = 'pk_test_wTgQXP3I9l9jJ8R8';
+  // LLAVE PÚBLICA PROPORCIONADA
+  const CULQI_PUBLIC_KEY = import.meta.env.VITE_CULQI_PUBLIC_KEY || 'pk_test_wTgQXP3I9l9jJ8R8';
 
   // Usar ref para evitar problemas de closure en el callback global de Culqi
   const onSuccessRef = useRef(onSuccess);

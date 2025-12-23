@@ -24,6 +24,15 @@ model User {
   ownedItems    Item[]    @relation("ItemOwner")
   rentals       Rental[]  @relation("RenterRentals")
   givenReviews  Review[]  @relation("ReviewerReviews")
+  
+  status        VerificationStatus @default(PENDING)
+  documents     Json?              // Stores URLs/Paths of uploaded files
+}
+
+enum VerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
 }
 
 model Item {
