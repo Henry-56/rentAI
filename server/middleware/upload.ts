@@ -1,9 +1,11 @@
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import os from 'os';
 
-// Ensure upload directory exists
-const uploadDir = path.join(process.cwd(), 'server', 'uploads', 'kyc');
+// Use system temp directory (works on Render/Vercel/Local)
+const uploadDir = path.join(os.tmpdir(), 'rentai-uploads', 'kyc');
+
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }

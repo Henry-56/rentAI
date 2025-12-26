@@ -182,7 +182,16 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onRegister, onNaviga
       setSuccess(true);
     } catch (err: any) {
       console.error("Register error:", err);
-      setError(err.response?.data?.message || 'Error al registrarse');
+      // Extract error message robustly
+      let msg = "Error al registrarse";
+      if (err.response?.data?.message) {
+        msg = err.response.data.message;
+      } else if (typeof err.response?.data === 'string') {
+        msg = err.response.data;
+      } else if (err.message) {
+        msg = err.message;
+      }
+      setError(msg);
       setIsLoading(false);
     }
   };

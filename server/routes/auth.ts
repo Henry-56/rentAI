@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { query } from '../db';
 import { upload } from '../middleware/upload';
 import { sendKycAlert, sendAccountApproved } from '../services/email';
+import crypto from 'crypto';
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || 'secret';
@@ -39,10 +40,12 @@ router.post('/register', upload.fields([
             utilityBill: files.utilityBill[0].path
         };
 
+        const id = crypto.randomUUID();
+
         const result = await query(
-            `INSERT INTO "User" (email, name, password, role, "avatarUrl", status, documents) 
-       VALUES ($1, $2, $3, $4, $5, 'PENDING', $6) RETURNING id, email, name, role, "avatarUrl"`,
-            [email, name, hashedPassword, role, avatarUrl, JSON.stringify(documents)]
+            `INSERT INTO "User" (id, email, name, password, role, "avatarUrl", status, documents, "updatedAt") 
+       VALUES ($1, $2, $3, $4, $5, $6, 'PENDING', $7, NOW()) RETURNING id, email, name, role, "avatarUrl"`,
+            [id, email, name, hashedPassword, role, avatarUrl, JSON.stringify(documents)]
         );
 
         const user = result.rows[0];
@@ -59,9 +62,13 @@ router.post('/register', upload.fields([
             user: { ...user, status: 'PENDING' }
         });
 
-    } catch (error) {
-        console.error("Register error:", error);
-        res.status(500).json({ message: "Error en el servidor" });
+    } catch (error: any) {
+        console.error("Register error DETAILS:", error);
+        // RETURN ERROR MESSAGE FOR DEBUGGING (Temporary/Dev mode)
+        res.status(500).json({
+            message: error.message || "Error interno del servidor",
+            stack: error.stack
+        });
     }
 });
 
@@ -194,7 +201,17 @@ router.get('/me', async (req, res) => {
             return;
         }
 
-        res.json(result.rows[0]);
+        const user = result.rows[0];
+
+        // STRICT VERIFICATION CHECK
+        if (user.status && user.status !== 'VERIFIED') {
+            return res.status(403).json({
+                message: "Cuenta pendiente de validación.",
+                status: user.status
+            });
+        }
+
+        res.json(user);
     } catch (error) {
         res.status(401).json({ message: "Token inválido" });
     }
