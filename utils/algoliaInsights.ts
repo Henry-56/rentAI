@@ -39,22 +39,27 @@ export const trackClick = (clickData: { objectID: string; indexName: string; que
     // Safety check again for consent in case it was revoked (if we supported revocation)
     if (localStorage.getItem('rentai_cookie_consent') !== 'true') return;
 
-    if (clickData.queryID) {
-        // Clicked after search
-        searchInsights('clickedObjectIDsAfterSearch', {
-            eventName: 'Item Clicked',
-            index: clickData.indexName,
-            objectIDs: [clickData.objectID],
-            positions: [clickData.position || 0],
-            queryID: clickData.queryID
-        });
-    } else {
-        // Generic click (browse)
-        searchInsights('clickedObjectIDs', {
-            eventName: 'Item Clicked (Browse)',
-            index: clickData.indexName,
-            objectIDs: [clickData.objectID]
-        });
+    try {
+        if (clickData.queryID) {
+            // Clicked after search
+            searchInsights('clickedObjectIDsAfterSearch', {
+                eventName: 'Item Clicked',
+                index: clickData.indexName,
+                objectIDs: [clickData.objectID],
+                positions: [clickData.position || 0],
+                queryID: clickData.queryID
+            });
+        } else {
+            // Generic click (browse)
+            searchInsights('clickedObjectIDs', {
+                eventName: 'Item Clicked (Browse)',
+                index: clickData.indexName,
+                objectIDs: [clickData.objectID]
+            });
+        }
+    } catch (e) {
+        // Silently fail if blocked by ad-blocker or network error
+        console.warn("Algolia Insights blocked or failed (Harmless)");
     }
 };
 

@@ -22,7 +22,7 @@ router.get('/', async (req, res) => {
             EXISTS (
                 SELECT 1 FROM "Rental" r 
                 WHERE r."itemId" = i.id 
-                AND r.status IN ('PENDING_PAYMENT', 'IN_REVIEW', 'CONFIRMED', 'IN_PROGRESS')
+                AND r.status IN ('PENDING_PAYMENT', 'IN_REVIEW', 'IN_PROGRESS')
                 AND CURRENT_DATE BETWEEN r."startDate"::date AND r."endDate"::date
             ) as is_rented_today
             FROM "Item" i 
